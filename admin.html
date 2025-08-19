@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Admin – VIP Leilões (demo)</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="assets/style.css"/>
+</head>
+<body>
+
+<header class="header">
+  <div class="container top-bar">
+    <div class="brand">
+      <img src="assets/logo.png" alt="VIP Leilões Logo" class="logo">
+    </div>
+    <div class="user-actions">
+      <a href="cadastro.html" class="btn">Cadastre-se</a>
+      <a href="#" class="btn secondary">Entrar</a>
+    </div>
+  </div>
+  <nav class="main-nav">
+    <div class="container">
+      <a href="index.html">VEÍCULOS</a>
+      <a href="cadastro.html">CADASTRO</a>
+      <a href="admin.html">ADMIN</a>
+    </div>
+  </nav>
+</header>
+
+<main class="listings">
+  <div class="container">
+    <h1 class="page-title">Painel de Cadastros</h1>
+    <p>Esta página lista os cadastros feitos em <a href="cadastro.html">cadastro.html</a> e salvos no navegador (localStorage).</p>
+    
+    <div class="form-container">
+      <div class="admin-actions">
+        <input id="q" class="input" placeholder="Buscar por nome, CPF, e-mail..."/>
+        <button class="btn" onclick="exportCSV()"><i class="fa fa-file-excel-o"></i> Exportar CSV</button>
+        <button class="btn secondary" onclick="exportJSON()">Exportar JSON</button>
+        <button class="btn btn-danger" onclick="clearAll()"><i class="fa fa-trash-o"></i> Apagar tudo</button>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="table" id="tbl">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nome</th>
+              <th>CPF</th>
+              <th>E-mail</th>
+              <th>Celular</th>
+              <th>Cidade/UF</th>
+              <th>Criado em</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+
+<footer class="footer">
+  <div class="container">
+    <div>
+      <b>Grupo VIP (demo)</b><br/>
+      <span class="small">Protótipo estático para estudo. Nenhum dado é enviado a servidores.</span>
+    </div>
+    <div class="small">© 2025 – Feito em HTML/CSS/JS, persistência em localStorage.</div>
+  </div>
+</footer>
+
+  <script>
+  function load(){ return JSON.parse(localStorage.getItem('cadastros')||'[]') }
+  function save(arr){ localStorage.setItem('cadastros', JSON.stringify(arr)) }
+
+  function render(){
+    const q = (document.getElementById('q').value||'').toLowerCase();
+    const tbody = document.querySelector('#tbl tbody');
+    const arr = load().sort((a,b)=>b.id.slice(1)-a.id.slice(1)).filter(c => JSON.stringify(c).toLowerCase().includes(q));
+    
+    if(!arr.length){
+      tbody.innerHTML = `<tr><td colspan="8">Nenhum cadastro encontrado.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = arr.map(c => `
+      <tr>
+        <td><span class="badge-id">\${c.id}</span></td>
+        <td>\${c.nome}</td>
+        <td>\${c.cpf}</td>
+        <td>\${c.email}</td>
+        <td>\${c.celular}</td>
+        <td>\${c.endereco.cidade}/\${c.endereco.estado}</td>
+        <td>\${new Date(c.criadoEm).toLocaleString('pt-BR')}</td>
+        <td class="actions-cell">
+          <button class="btn btn-sm" onclick='view("\${c.id}")'><i class="fa fa-eye"></i></button>
+          <button class="btn btn-sm secondary" onclick='delOne("\${c.id}")'><i class="fa fa-trash"></i></button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function view(id){
+    const c = load().find(x => x.id===id);
+    if(!c) return;
+    const txt = JSON.stringify(c,null,2);
+    const w = window.open();
+    w.document.write('<pre style="white-space:pre-wrap; word-wrap:break-word; font-family:monospace;">'+txt.replace(/[&<>]/g,s=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[s]))+'</pre>');
+  }
+
+  function delOne(id){
+    if(confirm(\`Tem certeza que deseja excluir o cadastro \${id}?\`)){
+      const arr = load().filter(x => x.id!==id);
+      save(arr); render();
+    }
+  }
+  function clearAll(){
+    if(confirm('ATENÇÃO!\\n\\nApagar TODOS os cadastros salvos neste navegador? Esta ação não pode ser desfeita.')){ save([]); render(); }
+  }
+
+  function exportCSV(){
+    const arr = load();
+    if(!arr.length) return alert('Nenhum cadastro para exportar.');
+    const cols = ['id','nome','cpf','email','celular','telefone','cidade','estado','cep','criadoEm'];
+    const rows = arr.map(c => [
+      c.id,c.nome,c.cpf,c.email,c.celular,c.telefone||'',
+      c.endereco?.cidade||'', c.endereco?.estado||'', c.endereco?.cep||'', c.criadoEm
+    ]);
+    const csv = [cols.join(','), ...rows.map(r => r.map(v => '"'+String(v).replaceAll('"','""')+'"').join(','))].join('\\n');
+    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='cadastros.csv'; a.click();
+  }
+  function exportJSON(){
+    const arr = load();
+    if(!arr.length) return alert('Nenhum cadastro para exportar.');
+    const blob = new Blob([JSON.stringify(arr,null,2)], {type:'application/json'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='cadastros.json'; a.click();
+  }
+
+  document.getElementById('q').addEventListener('input', render);
+  render();
+  </script>
+</body>
+</html>

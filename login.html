@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>VIP Leilões - Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,500,800" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bs-blue: #0d6efd;
+            --bs-gray: #6c757d;
+            --bs-font-sans-serif: "Roboto", sans-serif;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--bs-font-sans-serif);
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #212529;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Cabeçalho */
+        .header {
+            background-color: #fff;
+            padding: 15px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            height: 40px;
+        }
+        .nav-link {
+            color: var(--bs-blue);
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        /* Conteúdo e Formulário */
+        .page-content {
+            flex-grow: 1;
+            padding: 50px 0;
+        }
+        .contact-form {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Caixa de Login - Estilo Principal */
+        .fundoBox {
+            background-color: #ffffff;
+            box-shadow: 0 1px 10px #ccc;
+            font-family: "Montserrat", sans-serif;
+            padding: 3rem; /* Equivalente a p-5 */
+            border-radius: 8px;
+            width: 100%;
+            max-width: 480px;
+        }
+        
+        .subtitulo_login {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            text-align: center;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: .75rem;
+            font-size: 1rem;
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+            margin-bottom: 1rem;
+        }
+        
+        .position-relative {
+            position: relative;
+        }
+
+        .eye {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-75%);
+            cursor: pointer;
+            color: #888;
+        }
+
+        .box-fgtpass {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.9em;
+        }
+        
+        .lnk-fgtpass {
+            color: var(--bs-blue);
+            text-decoration: none;
+        }
+
+        .d-grid {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .btnPerso {
+            background-color: var(--bs-blue);
+        }
+
+        .btn-register {
+            background-color: var(--bs-gray);
+        }
+        
+        .btn-register .small {
+            font-size: 0.75em;
+            display: block;
+            margin-top: 4px;
+            opacity: 0.8;
+        }
+
+        /* Rodapé */
+        .footer {
+            background-color: #2c2c2c;
+            padding: 25px 0;
+            margin-top: auto;
+        }
+        .footer .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .security-badges {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .security-badges img {
+            height: 45px;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="container top-bar">
+            <a class="brand" href="#">
+                <img src="assets/logo.png" alt="VIP Leilões Logo" class="logo">
+            </a>
+            <a class="nav-link" href="#"><i class="fa fa-user-o" style="margin-right: 5px;"></i>Entrar | Cadastrar</a>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <div class="container">
+            <div class="contact-form">
+                <form action="#" class="lg-colside" onsubmit="return false;">
+                    <div class="fundoBox">
+                        <span class="subtitulo_login">Já tenho cadastro</span>
+                        
+                        <div class="col-md-12">
+                            <input type="email" class="form-control" placeholder="E-mail" required>
+                        </div>
+
+                        <div class="col-md-12 position-relative">
+                            <input type="password" class="form-control" id="senhaLogin" placeholder="Senha" required>
+                            <div class="eye">
+                                <i class="fa fa-eye fa-lg" id="togglePassword"></i>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="box-fgtpass">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="checkboxConnect">
+                                    <label class="form-check-label" for="checkboxConnect">Mantenha-me conectado</label>
+                                </div>
+                                <a class="lnk-fgtpass" href="#">Esqueceu seu e-mail ou senha?</a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 d-grid">
+                            <button class="btn btnPerso" type="submit">Entrar</button>
+                            <a class="btn btn-register" href="cadastro.html">
+                                Não é cadastrado? Cadastre-se
+                                <span class="small">(você será direcionado para a página de cadastro)</span>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="security-badges">
+                <img src="assets/grupovip.webp" alt="Selo SSL Secure Connection">
+                <img src="assets/seguro.svg" alt="Selo Google Safe Browsing">
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Script para alternar visibilidade da senha
+        const togglePassword = document.querySelector('#togglePassword');
+        const passwordInput = document.querySelector('#senhaLogin');
+
+        togglePassword.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+    </script>
+</body>
+</html>

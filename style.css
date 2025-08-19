@@ -1,0 +1,250 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+  --primary-color: #00529e;
+  --secondary-color: #00a651;
+  --dark-gray: #333;
+  --medium-gray: #666;
+  --light-gray: #f4f4f4;
+  --border-color: #ddd;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  background-color: var(--light-gray);
+  color: var(--dark-gray);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* ======================================================== */
+/* HEADER E CARROSSEL (CORRIGIDO)                           */
+/* ======================================================== */
+.hdr-main { position: sticky; top: 0; z-index: 1030; background-color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.hdr-main .navbar { padding: 0.5rem 0; }
+.hdr-main .navbar-brand img { height: 40px; }
+.hdr-main .nav-link { color: var(--dark-gray); font-weight: 500; font-size: 0.9rem; }
+.hdr-main .navbar-nav .nav-link:hover { color: var(--primary-color); }
+.hdr-rightnav { display: flex; align-items: center; gap: 20px; }
+.hdr-rightnav .nav-link { display: flex; align-items: center; gap: 8px; }
+
+#heroCarousel .carousel-item {
+  height: 65vh;
+  min-height: 400px;
+  background-size: cover;
+  background-position: center center;
+  position: relative;
+}
+
+/* A REGRA ::before QUE ESCURECIA O BANNER FOI REMOVIDA DAQUI */
+
+#heroCarousel .carousel-caption { bottom: 20%; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); }
+#heroCarousel .carousel-caption h1 { font-size: 3rem; font-weight: 700; }
+
+/* ======================================================== */
+/* SEÇÃO DE CATEGORIAS (Sem alterações)                      */
+/* ======================================================== */
+.hm-seccategoria { background-color: #f8f9fa; padding: 25px; border-bottom: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: -80px; position: relative; z-index: 10; }
+.innercateg { display: flex; justify-content: center; align-items: flex-start; flex-wrap: wrap; gap: 20px; }
+.hm-catitem { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--dark-gray); width: 100px; transition: all 0.2s ease-in-out; border: 2px solid transparent; padding: 10px; border-radius: 8px; }
+.hm-catitem:hover, .hm-catitem.active { transform: translateY(-4px); color: var(--primary-color); border-color: var(--primary-color); background-color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+.hm-caticon { width: 60px; height: 60px; border-radius: 50%; background-color: #fff; border: 2px solid var(--border-color); display: flex; justify-content: center; align-items: center; margin-bottom: 10px; transition: all 0.2s ease-in-out; }
+.hm-catitem:hover .hm-caticon, .hm-catitem.active .hm-caticon { border-color: var(--primary-color); }
+.hm-caticon img { max-height: 30px; width: auto; }
+.hm-catlabel { font-size: 0.8rem; font-weight: 700; text-align: center; margin: 0; }
+
+
+/* ======================================================== */
+/* LISTAGENS E FILTROS (NOVOS ESTILOS)                      */
+/* ======================================================== */
+.listings { padding: 40px 0; }
+.listings h2 { font-size: 1.8rem; color: var(--primary-color); margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
+#results-count { font-size: 1rem; color: var(--medium-gray); font-weight: 400; margin-left: 8px; }
+
+/* ESTILOS DO NOVO FILTRO PROFISSIONAL */
+.filters {
+  display: flex;
+  flex-wrap: wrap; /* Permite que os itens quebrem para a próxima linha no mobile */
+  gap: 15px;
+  align-items: center; /* Alinha todos os itens verticalmente */
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin-top: 30px;
+  position: relative;
+  z-index: 5;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.search-group {
+  flex-grow: 1; /* Faz o campo de busca ocupar o espaço restante */
+}
+
+.form-control, .form-select {
+  height: 45px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  padding: 0 10px;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+  height: 45px; /* Garante a mesma altura dos outros campos */
+}
+
+.checkbox-group label {
+  margin-left: 8px;
+  font-weight: 500;
+  white-space: nowrap; /* Impede que o texto quebre */
+  color: var(--dark-gray);
+  cursor: pointer;
+}
+
+.filters .btn-primary {
+  font-weight: bold;
+  height: 45px;
+  padding: 0 30px;
+}
+
+/* ======================================================== */
+/* GRID, CARDS, FOOTER E MODAL (Sem alterações)             */
+/* ======================================================== */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; transition: opacity 0.3s ease-in-out; }
+.grid.loading { opacity: 0.5; }
+.grid-no-results { grid-column: 1 / -1; text-align: center; padding: 50px 20px; }
+.grid-no-results p { font-size: 1.2rem; font-weight: 500; margin: 0; }
+.grid-no-results small { font-size: 1rem; color: var(--medium-gray); }
+.card.crd-main { background-color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid var(--border-color); position: relative; padding-top: 40px; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.card.crd-main:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
+.card .card-link-wrapper { text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%; }
+.card .card-img-container { width: 100%; padding-top: 66.66%; position: relative; }
+.card .card-img-top { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+.selo-destaque { position: absolute; bottom: 10px; right: 10px; z-index: 5; background-color: var(--secondary-color); color: white; padding: 5px 10px; font-size: 0.8rem; font-weight: 700; border-radius: 3px; }
+.card .crd-status { position: absolute; top: 0; left: 0; width: 100%; background-color: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; padding: 8px; font-weight: 500; height: 40px; font-size: 0.9rem; }
+.crd-status .itm-statusname { margin: 0; margin-left: 8px; }
+.card .card-body { padding: 15px; text-align: left; display: flex; flex-direction: column; flex-grow: 1; }
+.card .crd-lineone h3, .card .crd-linetwo h2 { margin: 0; font-weight: 700; }
+.card .crd-lineone h3 { font-size: 0.8rem; color: var(--medium-gray); margin-bottom: 2px; }
+.card .crd-linetwo h2 { font-size: 1.2rem; color: var(--dark-gray); }
+.card .crd-linethree { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 0.9rem; color: var(--medium-gray); border-bottom: 1px solid var(--light-gray); padding-bottom: 10px; }
+.card .crd-linethree i { margin-right: 5px; }
+.card .crd-linefour { text-align: center; padding: 10px 0; }
+.card .crd-linefour .crd-value { font-size: 1.5rem; font-weight: 700; color: var(--dark-gray); margin: 0; }
+.card .crd-linefour p { margin: 0; font-weight: 500; font-size: 0.8rem; color: var(--medium-gray); }
+.card .card-footer { padding: 0; margin-top: auto; background-color: #fff; border-top: none; }
+.btn-info-footer { width: 100%; padding: 12px; background-color: transparent; color: var(--primary-color); font-weight: bold; border: none; border-top: 1px solid var(--light-gray); border-radius: 0 0 8px 8px; text-align: center; text-decoration: none; display: block; transition: background-color 0.2s ease; cursor: pointer; }
+.btn-info-footer:hover { background-color: var(--light-gray); }
+.btn-info-footer i { margin-right: 8px; }
+.footer { background-color: #2c3e50; color: #ecf0f1; padding: 30px 0; margin-top: 40px; }
+.footer .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+.footer b { color: white; }
+.footer .small { font-size: 0.85rem; opacity: 0.8; }
+.modal-header { border-bottom: 1px solid var(--border-color); }
+.modal-title { color: var(--primary-color); font-weight: 700; }
+#modalTitle { font-size: 1.8rem; font-weight: 700; color: var(--dark-gray); margin-bottom: 5px; }
+#modalDetails { font-size: 1rem; margin-bottom: 20px; }
+.modal-price-box { background-color: var(--light-gray); padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
+.modal-price-box small { font-size: 0.8rem; font-weight: 500; color: var(--medium-gray); }
+.modal-price { font-size: 2.5rem; font-weight: 700; color: var(--primary-color); margin: 0; }
+.btn-whatsapp { background-color: #25D366; color: white; }
+.btn-whatsapp:hover { background-color: #1EAE54; color: white; }
+.btn-cadastro { background-color: var(--secondary-color); color: white; }
+.btn-cadastro:hover { background-color: #00823f; color: white; }
+
+/* ======================================================== */
+/* MEDIA QUERIES PARA RESPONSIVIDADE                        */
+/* ======================================================== */
+@media (max-width: 992px) {
+  #heroCarousel .carousel-caption h1 { font-size: 2.2rem; }
+}
+
+@media (max-width: 768px) {
+  .footer .container { flex-direction: column; gap: 10px; text-align: center; }
+  #heroCarousel .carousel-item { height: 50vh; }
+  #heroCarousel .carousel-caption h1 { font-size: 1.8rem; }
+  
+  /* Layout dos filtros para mobile */
+  .filters {
+    flex-direction: column;
+    align-items: stretch; /* Faz os itens ocuparem 100% da largura */
+  }
+
+  .hm-seccategoria { margin-top: -60px; padding-left: 15px; padding-right: 15px; position: relative; }
+  .hm-seccategoria::after { content: '>'; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 28px; font-weight: bold; color: var(--medium-gray); background: linear-gradient(to right, transparent, #f8f9fa 50%); padding-left: 20px; pointer-events: none; }
+  .innercateg { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; padding-bottom: 10px; }
+  .innercateg::-webkit-scrollbar { display: none; }
+  .innercateg { -ms-overflow-style: none; scrollbar-width: none; }
+  .hm-catitem { flex-shrink: 0; width: 90px; }
+  
+  .grid { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 15px; padding-bottom: 15px; }
+  .grid::-webkit-scrollbar { display: none; }
+  .grid { -ms-overflow-style: none; scrollbar-width: none; }
+  .grid > .card.crd-main { flex-shrink: 0; width: 280px; }
+}
+
+/* ======================================================== */
+/* SELOS (logos de confiança)                               */
+/* ======================================================== */
+
+/* Container opcional para alinhar os selos lado a lado */
+.selos-logos {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;          /* quebra bonito no mobile */
+  line-height: 0;           /* remove espaço “fantasma” sob imagens */
+}
+
+/* Estilo canônico via classe */
+img.selo-logo {
+  height: 40px;             /* mesma altura p/ todos */
+  width: auto;              /* mantém proporção */
+  object-fit: contain;      /* garante encaixe sem esticar */
+  vertical-align: middle;   /* evita desalinhamento em linha */
+  display: inline-block;
+}
+
+/* Fallback: se não quiser mexer no HTML, estiliza pelos alts/arquivos */
+img[alt="Selo Leilão Seguro"],
+img[alt="Selo Aleibras"],
+img[alt="Selo ReclameAQUI"],
+img[src*="seguro.svg"],
+img[src*="aleibras.svg"],
+img[src*="aqui.webp"] {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+@media (max-width: 768px) {
+  img.selo-logo,
+  img[alt="Selo Leilão Seguro"],
+  img[alt="Selo Aleibras"],
+  img[alt="Selo ReclameAQUI"],
+  img[src*="seguro.svg"],
+  img[src*="aleibras.svg"],
+  img[src*="aqui.webp"] {
+    height: 32px;           /* reduz no mobile */
+  }
+}
+
+/* Se os selos ficarem no rodapé, centraliza e dá espaçamento */
+.footer .selos-logos {
+  justify-content: center;
+  gap: 14px;
+}

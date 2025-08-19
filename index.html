@@ -1,0 +1,862 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Home – VIP Leilões (demo)</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    /* Estilos para os blocos de leilão */
+    .leiloes-adicionais .crd-wrapper-link {
+        display: block;
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+        overflow: hidden;
+        transition: all 0.3s ease-in-out;
+        height: 100%;
+        background-color: #fff;
+        text-decoration: none;
+        color: inherit;
+    }
+    .leiloes-adicionais .crd-wrapper-link:hover {
+      box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+      transform: translateY(-5px);
+    }
+    .leiloes-adicionais .crd-image {
+        position: relative;
+    }
+    .leiloes-adicionais .crd-comcarous {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        width: 100px;
+        background: rgba(255,255,255,0.8);
+        border-radius: 5px;
+        padding: 5px;
+    }
+    .leiloes-adicionais .dtl-comitimg {
+        max-width: 100%;
+        height: auto;
+    }
+    .crd-auct {
+        padding: 1rem;
+    }
+    .crd-auct p {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+    .crd-auct p .fa {
+        margin-right: 5px;
+    }
+    
+    /* SEÇÃO DE BENEFÍCIOS (COM IMAGEM DE FUNDO) */
+    .benefits-section {
+        padding: 80px 0;
+        position: relative;
+        background-image: url('https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2070&auto=format&fit=crop');
+        background-size: cover;
+        background-position: center center;
+        background-attachment: fixed;
+    }
+    .benefits-section::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-color: rgba(0, 31, 61, 0.75);
+        z-index: 1;
+    }
+    .benefits-section .container {
+        position: relative;
+        z-index: 2;
+    }
+    .benefits-section .title {
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 50px;
+        color: #fff;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+    }
+    .benefits-section .title span {
+        color: #f0c808;
+    }
+    .benefit-item {
+        background-color: #fff;
+        padding: 35px 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.1);
+        height: 100%;
+        position: relative;
+        border-top: 4px solid #00529e;
+    }
+    .benefit-number {
+        position: absolute;
+        top: 15px;
+        left: 30px;
+        width: 40px;
+        height: 40px;
+        background-color: #00529e;
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+    .benefit-item h4 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-top: 60px;
+        margin-bottom: 15px;
+        color: #333;
+    }
+    .benefit-item p {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: #666;
+    }
+    .benefit-item img {
+        max-width: 180px;
+        margin-top: 15px;
+    }
+    
+    /* ESTILOS PARA O RODAPÉ */
+    .footer {
+        background-color: #2c3e50;
+        color: #bdc3c7;
+        padding: 50px 0 30px 0;
+        font-size: 0.9rem;
+    }
+    .footer p { margin-bottom: 0.5rem; }
+    .ftr-logo { max-width: 150px; margin-bottom: 20px; }
+    .ftr-social { margin-top: 20px; }
+    .ftr-social a { color: #fff; font-size: 1.5rem; margin-right: 15px; text-decoration: none; }
+    .ftr-social svg { height: 23px; width: auto; }
+    .ftr-vpl h3 { color: #fff; font-size: 1.2rem; margin-bottom: 15px; }
+    .ftr-vpl .substxt { color: #ecf0f1; }
+    .ftr-vpl input { background-color: #34495e; border: 1px solid #4a627a; color: #fff; }
+    .ftr-vpl input::placeholder { color: #95a5a6; }
+    .ftr-vpl button { background-color: #00529e; color: #fff; border: none; width: 100%; height: 100%; border-radius: 0.375rem; }
+    .ftr-lggroup { max-width: 180px; margin-top: 20px; }
+    .logos-rodape { max-height: 60px; margin: 10px 15px 10px 0; }
+    .rodape { font-size: 0.8rem; color: #7f8c8d; line-height: 1.5; margin-top: 20px; }
+    
+    /* BOTÃO FLUTUANTE WHATSAPP */
+    .fale-especialista-float {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        background-color: #25D366;
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 50px;
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 1rem;
+        z-index: 1050;
+        transition: transform 0.2s ease-in-out;
+    }
+    .fale-especialista-float:hover {
+        color: #fff;
+        transform: scale(1.05);
+    }
+    .fale-especialista-float .fa-whatsapp {
+        font-size: 1.6rem;
+        vertical-align: middle;
+        margin-right: 8px;
+    }
+
+    /* === ESTILOS PARA OS CARDS DE VEÍCULOS === */
+    .card-body.itm-body {
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+    }
+    .itm-firstline {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-bottom: 0.5rem;
+    }
+    .itm-info span {
+        font-weight: 600;
+    }
+    .itm-name {
+        font-size: 1rem;
+        font-weight: 400;
+        color: #495057;
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+    }
+    .itm-name .itm-marca {
+        font-weight: 700;
+        display: block;
+        color: #212529;
+        font-size: 1rem;
+    }
+    .itm-valuetag {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-bottom: 0.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; /* <<< CORREÇÃO APLICADA AQUI */
+    }
+    .itm-valuetag .fa {
+        margin-right: 5px;
+    }
+    .itm-valuetag span {
+        font-weight: 600;
+        color: #00529e;
+        margin-left: 0.5rem; /* <<< E AQUI, PARA ADICIONAR ESPAÇAMENTO */
+    }
+    .itm-value {
+        font-size: 1.7rem;
+        font-weight: 700;
+        color: #00529e;
+        margin-bottom: 0.75rem;
+    }
+    .itm-start {
+        font-size: 0.9rem;
+        color: #212529;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+    .itm-starttag {
+        font-weight: 400;
+        color: #6c757d;
+    }
+    .itm-start .fa {
+        margin-right: 5px;
+    }
+    .itm-badges {
+      margin-top: auto;
+      padding-top: 0.5rem;
+    }
+    .crd-main .card-link-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        text-decoration: none;
+        color: inherit;
+    }
+    .crd-main .card-body {
+        flex-grow: 1;
+    }
+    .crd-main .card-footer {
+        background-color: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+    }
+    .btn-info-footer {
+        width: 100%;
+    }
+    /* === FIM DOS ESTILOS DOS CARDS === */
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .leiloes-adicionais .row,
+      .benefits-section .benefits-row {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 15px;
+        margin-left: 0;
+        margin-right: 0;
+        padding-bottom: 15px;
+      }
+      .leiloes-adicionais .row::-webkit-scrollbar,
+      .benefits-section .benefits-row::-webkit-scrollbar { 
+        display: none; 
+      }
+      .leiloes-adicionais .row,
+      .benefits-section .benefits-row { 
+        -ms-overflow-style: none; scrollbar-width: none; 
+      }
+      .leiloes-adicionais .row > [class*="col-"],
+      .benefits-section .benefits-row > [class*="col-"] {
+        flex-shrink: 0;
+        width: 280px;
+      }
+      .benefits-section .benefits-row {
+        justify-content: flex-start !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header class="hdr-main">
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="assets/logo.png" alt="VIP Leilões Logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="somos.html">Quem Somos</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Agenda</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://blog.vipleiloes.com.br/comprar-carros-em-leilao/">Blog</a></li>
+        </ul>
+        <div class="hdr-rightnav">
+          <a id="btnLogin" class="nav-link" href="login.html"><i class="fa fa-user-o"></i>Entrar | Cadastrar</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main>
+<div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active" style="background-image: url('assets/carrossel1.webp');">
+    </div>
+    <div class="carousel-item" style="background-image: url('assets/carrossel2.webp');">
+    </div>
+  </div>
+</div>
+
+  <section class="hm-seccategoria">
+      <div class="container">
+        <div class="innercateg">
+            <a href="#" data-category="seminovos" class="hm-catitem active"><div class="hm-caticon"><img src="https://img.icons8.com/ios/50/00529e/car-sale.png" alt="Ícone Seminovos"></div><h4 class="hm-catlabel">SEMINOVOS</h4></a>
+            <a href="#" data-category="usados" class="hm-catitem"><div class="hm-caticon"><img src="https://img.icons8.com/?size=100&id=59751&format=png&color=228BE6" alt="Ícone Usados"></div><h4 class="hm-catlabel">USADOS</h4></a>
+            <a href="#" data-category="motos" class="hm-catitem"><div class="hm-caticon"><img src="https://img.icons8.com/ios/50/00529e/motorcycle.png" alt="Ícone Motos"></div><h4 class="hm-catlabel">MOTOS</h4></a>
+            <a href="#" data-category="sinistrados" class="hm-catitem"><div class="hm-caticon"><img src="https://img.icons8.com/ios/50/00529e/car-crash.png" alt="Ícone Sinistrados"></div><h4 class="hm-catlabel">SINISTRADOS</h4></a>
+            <a href="#" data-category="pesados" class="hm-catitem"><div class="hm-caticon"><img src="https://img.icons8.com/ios/50/00529e/truck.png" alt="Ícone Pesados"></div><h4 class="hm-catlabel">PESADOS</h4></a>
+            <a href="#" class="hm-catitem"><div class="hm-caticon"><img src="https://img.icons8.com/ios/50/00529e/property.png" alt="Ícone Imóveis"></div><h4 class="hm-catlabel">IMÓVEIS</h4></a>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#judicialModal" class="hm-catitem"><div class="hm-caticon"><img src="https://img.icons8.com/ios/50/00529e/auction.png" alt="Ícone Judiciais"></div><h4 class="hm-catlabel">JUDICIAIS</h4></a>
+        </div>
+      </div>
+  </section>
+
+  <div class="container">
+      <div class="filters">
+          <div class="form-group">
+              <select id="Enderecos" name="Enderecos" class="form-select">
+                  </select>
+          </div>
+          <div class="form-group">
+              <select id="Cidades" name="Cidades" class="form-select" disabled>
+                  <option value="">Cidade</option>
+              </select>
+          </div>
+          <div class="form-group search-group">
+              <input id="PalavraChave" name="PalavraChave" type="text" class="form-control" placeholder="O que você procura?">
+          </div>
+          <div class="form-group">
+              <button type="button" id="btnFiltrar" class="btn btn-primary">FILTRAR</button>
+          </div>
+      </div>
+  </div>
+
+  <section class="listings">
+    <div class="container">
+      <h2 id="listings-title">Veículos em Destaque <span id="results-count"></span></h2>
+      <div id="grid" class="grid"></div>
+      <div class="text-center mt-4">
+        <button id="btnExibirMais" class="btn secondary">CARREGAR MAIS VEÍCULOS</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="leiloes-adicionais py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-4">Confira nossos leilões</h2>
+      <div class="row">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <a href="#" target="_self" class="crd-wrapper-link">
+                <div class="crd-image">
+                    <img class="card-img-top" src="assets/motos.webp" loading="lazy">
+                    <div class="crd-comcarous">
+                        <div class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000" data-carousel="true">
+                            <div class="carousel-inner">
+                                <div class="carousel-item"><div class="dtl-incrsl"><img class="dtl-comitimg" src="https://armazviplprd.blob.core.windows.net/controle/geral/1/37816e8958f5468e93bbe5e5304a353a.png"></div></div>
+                                <div class="carousel-item active"><div class="dtl-incrsl"><img class="dtl-comitimg" src="https://armazviplprd.blob.core.windows.net/controle/geral/1/72aa3c9a13a84d65b426051af85618dc.png"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body crd-auct">
+                    <p class="crd-title"><i class="fa fa-motorcycle"></i> <small>Categoria:</small> <strong>MOTOS</strong></p>
+                    <p><span><i class="fa fa-calendar" aria-hidden="true"></i>18/08/2025</span> <span><i class="fa fa-clock-o" aria-hidden="true"></i>10:00</span></p>
+                    <p class="text-truncate"><i class="fa fa-gavel fa-flip-horizontal" aria-hidden="true"></i> Leiloeiro: VICENTE PAULO</p>
+                    <p class="text-truncate"><i class="fa fa-map-marker" aria-hidden="true"></i> AM - BA - PE - SP</p>
+                    <p><i class="fa fa-list" aria-hidden="true"></i> 22 Lotes até agora</p>
+                    <p><i class="fa fa-globe" aria-hidden="true"></i> Eletrônico</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <a href="#" target="_self" class="crd-wrapper-link">
+                <div class="crd-image">
+                    <img class="card-img-top" src="assets/sinistrados.webp" loading="lazy">
+                    <div class="crd-comcarous">
+                        <div class="carousel slide" data-bs-ride="carousel" data-bs-interval="4200" data-carousel="true">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active"><div class="dtl-incrsl"><img class="dtl-comitimg" src="https://armazviplprd.blob.core.windows.net/controle/geral/1/0df347709fd34d61b0d94330978b0c73.png"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body crd-auct">
+                    <p class="crd-title"><i class="fa fa-briefcase"></i> <small>Vendedor(es):</small> <strong>Financeiras</strong></p>
+                    <p><span><i class="fa fa-calendar" aria-hidden="true"></i>19/08/2025</span> <span><i class="fa fa-clock-o" aria-hidden="true"></i>11:00</span></p>
+                    <p class="text-truncate"><i class="fa fa-gavel fa-flip-horizontal" aria-hidden="true"></i> Leiloeiro: VICENTE PAULO</p>
+                    <p class="text-truncate"><i class="fa fa-map-marker" aria-hidden="true"></i> GO - PR - SC - RS</p>
+                    <p><i class="fa fa-list" aria-hidden="true"></i> 48 Lotes até agora</p>
+                    <p><i class="fa fa-globe" aria-hidden="true"></i> Eletrônico</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <a href="#" target="_self" class="crd-wrapper-link">
+                <div class="crd-image">
+                    <img class="card-img-top" src="https://armazviplprd.blob.core.windows.net/controle/geral/1/ec38890a221b4186b21393d313980962.png" loading="lazy">
+                    <div class="crd-comcarous">
+                        <div class="carousel slide" data-bs-ride="carousel" data-bs-interval="3800" data-carousel="true">
+                            <div class="carousel-inner">
+                                <div class="carousel-item"><div class="dtl-incrsl"><img class="dtl-comitimg" src="https://armazviplprd.blob.core.windows.net/controle/geral/1/37816e8958f5468e93bbe5e5304a353a.png"></div></div>
+                                <div class="carousel-item active"><div class="dtl-incrsl"><img class="dtl-comitimg" src="https://armazviplprd.blob.core.windows.net/controle/geral/1/72aa3c9a13a84d65b426051af85618dc.png"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body crd-auct">
+                    <p class="crd-title"><i class="fa fa-car"></i> <small>Origem:</small> <strong>Sinistrados</strong></p>
+                    <p><span><i class="fa fa-calendar" aria-hidden="true"></i>20/08/2025</span> <span><i class="fa fa-clock-o" aria-hidden="true"></i>14:30</span></p>
+                    <p class="text-truncate"><i class="fa fa-gavel fa-flip-horizontal" aria-hidden="true"></i> Leiloeiro: VICENTE PAULO</p>
+                    <p class="text-truncate"><i class="fa fa-map-marker" aria-hidden="true"></i> MG - ES - RJ</p>
+                    <p><i class="fa fa-list" aria-hidden="true"></i> 112 Lotes até agora</p>
+                    <p><i class="fa fa-globe" aria-hidden="true"></i> Eletrônico</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <a href="#" target="_self" class="crd-wrapper-link">
+                <div class="crd-image">
+                    <img class="card-img-top" src="assets/leilao.png" loading="lazy">
+                    <div class="crd-comcarous">
+                        <div class="carousel slide" data-bs-ride="carousel" data-bs-interval="4500" data-carousel="true">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active"><div class="dtl-incrsl"><img class="dtl-comitimg" src="https://armazviplprd.blob.core.windows.net/controle/geral/1/0df347709fd34d61b0d94330978b0c73.png"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body crd-auct">
+                    <p class="crd-title"><i class="fa fa-recycle"></i> <small>Vendedor(es):</small> <strong>Seguradoras</strong></p>
+                    <p><span><i class="fa fa-calendar" aria-hidden="true"></i>21/08/2025</span> <span><i class="fa fa-clock-o" aria-hidden="true"></i>09:00</span></p>
+                    <p class="text-truncate"><i class="fa fa-gavel fa-flip-horizontal" aria-hidden="true"></i> Leiloeiro: VICENTE PAULO</p>
+                    <p class="text-truncate"><i class="fa fa-map-marker" aria-hidden="true"></i> AM - PA - MT - MS</p>
+                    <p><i class="fa fa-list" aria-hidden="true"></i> 8 Lotes até agora</p>
+                    <p><i class="fa fa-globe" aria-hidden="true"></i> Eletrônico</p>
+                </div>
+            </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section class="benefits-section">
+      <div class="container">
+          <h2 class="title">Por que escolhem a <span>Vip Leilões?</span></h2>
+          <div class="row g-4 justify-content-lg-center benefits-row">
+              <div class="col-lg-4 col-md-6">
+                  <div class="benefit-item">
+                      <div class="benefit-number">1</div>
+                      <h4>A melhor oportunidade em veículos</h4>
+                      <p>Aqui você encontra diversas categorias de veículos, leiloados de maneira transparente, segura e garantida!</p>
+                  </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                  <div class="benefit-item">
+                      <div class="benefit-number">2</div>
+                      <h4>Confiança</h4>
+                      <p>Transparência e tranquilidade na negociação com o maior grupo de leilões do país.</p>
+                  </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                  <div class="benefit-item">
+                      <div class="benefit-number">3</div>
+                      <h4>Com você todo o tempo</h4>
+                      <p>Atendimento e suporte antes durante e depois do leilão. Temos orgulho em conquistar a nota máxima na avaliação dos nossos clientes no ReclameAQUI, e sermos BICAMPEÕES no melhor atendimento por votação popular.</p>
+                      <p><b>Aqui você pode confiar.</b></p>
+                      <img src="assets/selo.png" alt="Selo ReclameAQUI">
+                  </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                    <div class="benefit-item">
+                        <div class="benefit-number">4</div>
+                        <h4>Multiplataforma</h4>
+                        <p>A Vip Leilões está contigo em qualquer lugar. Você poderá fazer ótimos negócios de onde estiver e em qualquer dispositivo, com o máximo de segurança, basta ter acesso a internet.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="benefit-item">
+                        <div class="benefit-number">5</div>
+                        <h4>Financiamento</h4>
+                        <p>Realize seu sonho! Na Vip Leilões você conta com financiamento de veículos em leilão. Solicite a sua simulação, fácil e on-line.</p>
+                    </div>
+                </div>
+          </div>
+      </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-3 col-md-6 mb-4 text-center text-md-start">
+                <img src="assets/ftr-logovip.webp" alt="Logo Vip Leilões">
+                <p class="small">Copyright © VIP Leilões</p>
+                <p class="small">CNPJ n.° 08.187.134/0001-75</p>
+                <p class="small">Avenida Engenheiro Emiliano Macieira, n° 01, Maracanã, São Luís/MA - CEP 65095-602</p>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                 <div class="ftr-vpl">
+                    <h3><i class="fa fa-envelope-open"></i> Nossa Newsletter</h3>
+                    <p class="substxt small">Receba atualizações, novidades e ofertas exclusivas.</p>
+                    <div class="input-group">
+                        <input type="text" placeholder="Seu e-mail" class="form-control">
+                        <button class="btn btn-primary" type="button"><i class="fa fa-angle-right fa-lg" aria-hidden="true"></i></button>
+                    </div>
+                 </div>
+            </div>
+            <div class="col-lg-5 col-md-12 mb-4 text-center text-lg-end">
+                <div class="ftr-social mb-3">
+                    <a href="https://www.facebook.com/vipleiloes/" target="_blank"><i class="fa fa-facebook-square"></i></a>
+                    <a href="https://www.instagram.com/vipleiloes/" target="_blank"><i class="fa fa-instagram"></i></a>
+                    <a href="https://twitter.com/vip_leiloes" target="_blank"><i class="fa fa-twitter"></i></a>
+                    <a href="https://www.youtube.com/channel/UC35rRZHjwStUYq91uTRJgHg" target="_blank"><i class="fa fa-youtube-play"></i></a>
+                    <a href="https://www.linkedin.com/company/vip-leil%C3%B5es" target="_blank"><i class="fa fa-linkedin"></i></a>
+                    <a href="#" id="tiktokLink" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" height="23" width="100%" viewBox="0 0 448 512"><path fill="#fff" d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"></path></svg></a>
+                </div>
+                <div>
+                    <img src="assets/selo.png" alt="Selo Tricampeã">
+                    <img src="assets/seguro.svg" alt="Selo Leilão Seguro">
+                    <img src="assets/aleibras.svg" alt="Selo Aleibras">
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-12">
+                <p class="rodape mb-0">
+                    O parceiro que anuncia nesta página é o único responsável pelas transações comerciais que realizar com usuários do web site VIP Leilões. A comercialização do produto anunciado, bem como a garantia de sua legítima procedência, é de inteira responsabilidade do anunciante. As informações veiculadas nos anúncios deste site são de inteira responsabilidade do anunciante, não podendo o usuário responsabilizar a VIP Leilões pela veracidade e/ou autenticidade das mesmas. A VIP Leilões não é responsável por quaisquer danos diretos e/ou indiretos causados a terceiros, advindos da exibição dos anúncios em desacordo com o Código de Defesa do Consumidor e outras legislações aplicáveis ao comércio e/ou prestação de serviços por parte do anunciante. As vendas e entregas aos usuários e/ou terceiros de produtos anunciados no site são de inteira responsabilidade do anunciante. O usuário reconhece como sendo de sua exclusiva responsabilidade os riscos assumidos nas negociações que vier a efetuar com outros usuários do site. Para oferecer uma melhor experiência de navegação, a VIP Leilões utiliza cookies. Ao navegar pelo site você concorda com o uso dos mesmos.
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<a href="https://wa.me/5511999998888" class="fale-especialista-float" target="_blank">
+    <i class="fa fa-whatsapp"></i> Fale com um Especialista
+</a>
+
+<div class="modal fade" id="vehicleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">Detalhes do Veículo</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-7"><img id="modalImage" src="" class="img-fluid rounded mb-3 mb-md-0"></div>
+            <div class="col-md-5">
+              <h3 id="modalTitle"></h3><p id="modalDetails" class="text-muted"></p>
+              <div class="modal-price-box"><small>VALOR ATUAL</small><h2 id="modalPrice" class="modal-price"></h2></div><hr>
+              <p><strong>Localização:</strong> <span id="modalLocation"></span></p>
+              <div class="d-grid gap-2">
+                <a id="modalWhatsappButton" href="#" class="btn btn-whatsapp"><i class="fa fa-whatsapp"></i> Fale Conosco</a>
+                <a href="login.html" class="btn btn-cadastro"><i class="fa fa-gavel"></i> Quero Participar</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="judicialModal" tabindex="-1" aria-labelledby="judicialModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="judicialModalLabel">Termos Sobre Leilões Judiciais</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h6>Artigo 1: Objeto e Âmbito</h6>
+        <p>O presente termo regulamenta as condições de participação em leilões judiciais realizados por intermédio desta plataforma, em conformidade com o Código de Processo Civil e demais legislações aplicáveis. Os bens levados a leilão são provenientes de processos judiciais, e sua venda é determinada por ordem judicial para a satisfação de créditos.</p>
+        
+        <h6>Artigo 2: Cadastro e Habilitação</h6>
+        <p>A participação no leilão está condicionada à realização de cadastro prévio e habilitação na plataforma. O interessado deverá fornecer informações verdadeiras, precisas e atualizadas, responsabilizando-se civil e criminalmente por sua veracidade. A aprovação do cadastro não é automática e passará por análise.</p>
+
+        <h6>Artigo 3: Lances e Arrematação</h6>
+        <p>Os lances são irrevogáveis e irretratáveis. O participante é responsável por todos os lances registrados em seu nome. A arrematação será consolidada em favor do maior lance ofertado, desde que igual ou superior ao valor da avaliação ou ao preço mínimo estipulado pelo juízo. O pagamento do lance e da comissão do leiloeiro (5%) deverá ser efetuado no prazo máximo de 24 horas após o encerramento do leilão.</p>
+
+        <h6>Artigo 4: Condição dos Bens</h6>
+        <p>Os bens são vendidos no estado de conservação em que se encontram ("ad corpus"), não cabendo ao leiloeiro ou ao Poder Judiciário qualquer responsabilidade por consertos, reparos ou providências quanto à retirada e transporte. Recomenda-se a visitação prévia dos bens, quando disponível e autorizada.</p>
+
+        <h6>Artigo 5: Disposições Finais</h6>
+        <p>A participação no leilão implica na aceitação integral e incondicional de todos os termos e condições aqui estabelecidos, bem como do edital específico de cada leilão. Casos omissos serão resolvidos pelo Leiloeiro Público Oficial, com base na legislação vigente.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const masterDatabase = [
+    {id:1, category:'seminovos', financiavel: true, marca:'Volkswagen', modelo:'GOL 1.6', ano:2019, km:52000, preco:13990, img:'https://i.imgur.com/xSqm3CD.jpeg'},
+    {id:2, category:'seminovos', financiavel: true, marca:'Chevrolet', modelo:'ONIX 1.0 Turbo', ano:2020, km:26000, preco:23856, img:'https://i.imgur.com/khZFpWZ.jpeg'},
+    {id:3, category:'seminovos', financiavel: true, marca:'Hyundai', modelo:'HB20 Vision', ano:2019, km:41000, preco:18647, img:'https://i.imgur.com/NxESNQx.jpeg'},
+    {id:4, category:'seminovos', financiavel: false, marca:'Fiat', modelo:'ARGO DRIVE', ano:2018, km:69000, preco:13869, img:'https://i.imgur.com/rHELn3i.jpeg'},
+    {id:5, category:'seminovos', financiavel: true, marca:'Mercedes', modelo:'MERCEDES-BENZ GLC2504MATIC', ano:2017, km:78000, preco:41900, img:'https://i.imgur.com/uyKzp3L.jpeg'},
+    {id:6, category:'seminovos', financiavel: true, marca:'Honda', modelo:'TORO FREEDOM MT D4', ano:2018, km:48000, preco:45900, img:'https://i.imgur.com/XaAg1lx.jpeg'},
+    {id:7, category:'seminovos', financiavel: true, marca:'Renault', modelo:'KWID ZEN 10MT', ano:2020, km:12000, preco:23990, img:'https://i.imgur.com/lpkCB3e.jpeg'},
+    {id:8, category:'seminovos', financiavel: false, marca:'Ford', modelo:'Ka SE', ano:2018, km:65000, preco:13000, img:'https://i.imgur.com/YbwJvmL.jpeg'},
+    {id:9, category:'seminovos', financiavel: true, marca:'Jeep', modelo:'Renegade', ano:2020, km:35000, preco:18900, img:'https://i.imgur.com/WZvJjpb.jpeg'},
+    {id:11, category:'usados', financiavel: false, marca:'Fiat', modelo:'SIENA ELX FLEX', ano:2009, km:150000, preco:8000, img:'https://i.imgur.com/jX8gl7U.jpeg'},
+    {id:12, category:'usados', financiavel: true, marca:'Chevrolet', modelo:'Celta', ano:2012, km:120000, preco:16300, img:'https://i.imgur.com/N6wTrxD.jpeg'},
+    {id:13, category:'usados', financiavel: true, marca:'Ford', modelo:'Fiesta', ano:2008, km:180000, preco:7700, img:'https://i.imgur.com/mIJU4Et.jpeg'},
+    {id:14, category:'usados', financiavel: false, marca:'Volkswagen', modelo:'Fox', ano:2007, km:130000, preco:6700, img:'https://i.imgur.com/sH57lUb.jpeg'},
+    {id:15, category:'usados', financiavel: true, marca:'Renault', modelo:'Sandero', ano:2014, km:110000, preco:6000, img:'https://i.imgur.com/8TPLFNM.jpeg'},
+    {id:16, category:'usados', financiavel: true, marca:'Honda', modelo:'CR-V EXL', ano:2010, km:190000, preco:10500, img:'https://i.imgur.com/wGd5sgk.jpeg'},
+    {id:17, category:'usados', financiavel: false, marca:'Toyota', modelo:'HILUX CDLODM4HD', ano:2017, km:95000, preco:50500, img:'https://i.imgur.com/UFkqUHP.jpeg'},
+    {id:18, category:'usados', financiavel: true, marca:'Hyundai', modelo:'i30', ano:2012, km:140000, preco:12000, img:'https://i.imgur.com/B3PJxT1.jpeg'},
+    {id:19, category:'usados', financiavel: false, marca:'Peugeot', modelo:'207', ano:2015, km:125000, preco:11100, img:'https://i.imgur.com/gBSSuv4.jpeg'},
+    {id:21, category:'motos', financiavel: true, marca:'Honda', modelo:'CG 160', ano:2022, km:5000, preco:8000, img:'https://i.imgur.com/f4mrP3E.jpeg'},
+    {id:22, category:'motos', financiavel: true, marca:'Yamaha', modelo:'Factor 150', ano:2021, km:8000, preco:12000, img:'https://i.imgur.com/JVjOSIh.jpeg'},
+    {id:23, category:'motos', financiavel: false, marca:'Honda', modelo:'NXR 160 Bros ESDD', ano:2023, km:15000, preco:10000, img:'https://i.imgur.com/U70ftfs.jpeg'},
+    {id:24, category:'motos', financiavel: true, marca:'Honda', modelo:'CG 160 CARGO', ano:2024, km:12000, preco:16770, img:'https://i.imgur.com/9cLbnQo.jpeg'},
+    {id:25, category:'motos', financiavel: true, marca:'Yamaha', modelo:'YBR 125 Factor ED', ano:2019, km:18000, preco:5100, img:'https://i.imgur.com/zcxip5T.jpeg'},
+    {id:26, category:'motos', financiavel: true, marca:'Suzuki', modelo:'AN125', ano:2006, km:9000, preco:2000, img:'https://i.imgur.com/cYHiOU5.jpeg'},
+    {id:27, category:'motos', financiavel: false, marca:'Honda', modelo:'XRE 300', ano:2010, km:11000, preco:42000, img:'https://i.imgur.com/0R0v7Ik.jpeg'},
+    {id:28, category:'motos', financiavel: true, marca:'Honda', modelo:'POP 110I', ano:2022, km:13000, preco:5000, img:'https://i.imgur.com/3E9q6ne.jpeg'},
+    {id:29, category:'motos', financiavel: true, marca:'Honda', modelo:'CB300F TWISTER ABS', ano:2023, km:7000, preco:12000, img:'https://i.imgur.com/qBx2is5.jpeg'},
+    {id:31, category:'sinistrados', financiavel: false, marca:'Chevrolet', modelo:'CLASSIC (Batido)', ano:2009, km:50000, preco:1141, img:'https://i.imgur.com/8zBYzeY.jpeg'},
+    {id:32, category:'sinistrados', financiavel: false, marca:'Chevrolet', modelo:'S10 Z71 (Recuperado)', ano:2022, km:60000, preco:125000, img:'https://i.imgur.com/7h0Da0v.jpeg'},
+    {id:33, category:'sinistrados', financiavel: false, marca:'GM', modelo:'CELTA 4 PORTAS (Enchente)', ano:2003, km:80000, preco:1000, img:'https://i.imgur.com/sJcIMIH.jpeg'},
+    {id:34, category:'sinistrados', financiavel: false, marca:'Renault', modelo:'CLIO RN 1.0 16V (Batido)', ano:2002, km:40000, preco:2000, img:'https://i.imgur.com/gV8jjdM.jpeg'},
+    {id:35, category:'sinistrados', financiavel: false, marca:'Volkswagen', modelo:'SPACEFOX TREND GII (Recuperado)', ano:2018, km:55000, preco:40000, img:'https://i.imgur.com/t3HrzTb.jpeg'},
+    {id:36, category:'sinistrados', financiavel: false, marca:'Chevrolet', modelo:'SONIC LTZ NB AT (Batido)', ano:2013, km:30000, preco:5000, img:'https://i.imgur.com/hSQel0x.jpeg'},
+    {id:37, category:'sinistrados', financiavel: false, marca:'Hyundai', modelo:'HB20 1.6A PREM (Enchente)', ano:2017, km:70000, preco:4000, img:'https://i.imgur.com/PK0dsPH.jpeg'},
+    {id:38, category:'sinistrados', financiavel: false, marca:'Chevrolet', modelo:'TRACKER T A (Recuperado)', ano:2023, km:45000, preco:30000, img:'https://i.imgur.com/UWt21bh.jpeg'},
+    {id:39, category:'sinistrados', financiavel: false, marca:'Ford', modelo:'FIESTA SEDAN1.6FLEX (Recuperado)', ano:2013, km:25000, preco:1928, img:'https://i.imgur.com/wUTEduL.jpeg'},
+    {id:41, category:'pesados', financiavel: true, marca:'Mercedes-Benz', modelo:'416CDISPRINTERM', ano:2022, km:200000, preco:93000, img:'https://i.imgur.com/K58TEJC.jpeg'},
+    {id:42, category:'pesados', financiavel: false, marca:'Mercedes-Benz', modelo:'415CDISPRINTERM', ano:2015, km:150000, preco:72000, img:'https://i.imgur.com/LrViUKU.jpeg'},
+    {id:43, category:'pesados', financiavel: true, marca:'Mercedes-Benz', modelo:'SPRINTERM', ano:2008, km:100000, preco:18000, img:'https://i.imgur.com/hWA8UOl.jpeg'},
+    {id:44, category:'pesados', financiavel: true, marca:'JCB', modelo:'3CX RETRO ESCAVADEIRA 1/1', ano:2018, km:300000, preco:135000, img:'https://i.imgur.com/ta2Zcc0.jpeg'},
+    {id:45, category:'pesados', financiavel: false, marca:'JOHN DEERE', modelo:'6180J', ano:2017, km:400000, preco:680000, img:'https://i.imgur.com/vtJjXoF.jpeg'},
+    {id:46, category:'pesados', financiavel: true, marca:'Mercedes-Benz', modelo:'ACTROS 2651S 6X4', ano:2022, km:250000, preco:1810000, img:'https://i.imgur.com/MilDBu7.jpeg'},
+    {id:47, category:'pesados', financiavel: false, marca:'Mercedes-Benz', modelo:'ACTROS 2651S 6X4', ano:2022, km:180000, preco:2280000, img:'https://i.imgur.com/nFKRzYc.jpeg'},
+    {id:48, category:'pesados', financiavel: true, marca:'Volkswagen', modelo:'25.480 CTM 6X2', ano:2023, km:120000, preco:2380000, img:'https://i.imgur.com/6mehngb.jpeg'},
+    {id:49, category:'pesados', financiavel: true, marca:'Marcopolo', modelo:'VOLARE W9', ano:2014, km:500000, preco:50000, img:'https://i.imgur.com/jktP27O.jpeg'},
+  ];
+
+  const grid = document.getElementById('grid');
+  const resultsCountSpan = document.getElementById('results-count');
+  const fBusca = document.getElementById('PalavraChave');
+  const btnFiltrar = document.getElementById('btnFiltrar');
+  const btnExibirMais = document.getElementById('btnExibirMais');
+  const selectEstado = document.getElementById('Enderecos');
+  const selectCidade = document.getElementById('Cidades');
+  
+  let currentCategory = 'seminovos';
+  let currentPage = 1;
+  const itemsPerPage = 9;
+
+  function money(v){ return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
+  function kmFormat(v){ return (v || 0).toLocaleString('pt-BR'); }
+
+  function render(items, append = false) {
+    if (!append && items.length === 0) {
+        grid.innerHTML = `<div class="grid-no-results"><p>Nenhum veículo encontrado.</p><small>Tente alterar os filtros ou a categoria.</small></div>`;
+        return;
+    }
+
+    const gridHTML = items.map(v => {
+      const title = `${v.marca} ${v.modelo}`;
+      const fullTitle = `${title} ${v.ano}`;
+      
+      // Dados Fictícios para o novo layout
+      const randomLances = Math.floor(Math.random() * 20) + 1;
+      const initialBid = money(v.preco * 0.75);
+      
+      // === TEMPLATE DO CARD ATUALIZADO ===
+      return `
+      <div class="card crd-main">
+        <div class="crd-status"><i class="fa fa-gavel"></i><p class="itm-statusname">Aberto para Lances</p></div>
+        <a href="#" class="card-link-wrapper" data-bs-toggle="modal" data-bs-target="#vehicleModal" data-id="${v.id}">
+          <div class="card-img-container">
+            <img src="${v.img}" loading="lazy" class="card-img-top" alt="${fullTitle}">
+            <div class="selo-destaque">${v.category.toUpperCase()}</div>
+          </div>
+          <div class="card-body itm-body">
+              <div class="itm-firstline">
+                  <p class="itm-info"><span>Lote:</span> #${v.id}</p>
+                  <p class="itm-info"><span>Local:</span> SP</p>
+              </div>
+              <h4 class="itm-name">
+                  <span class="itm-marca">${v.marca.toUpperCase()}</span>
+                  ${v.modelo} ${v.ano}
+              </h4>
+              <p class="itm-valuetag">
+                  <i class="fa fa-database"></i>
+                  Valor Atual
+                  <span>(${randomLances}) Lances</span>
+              </p>
+              <h3 class="itm-value">${money(v.preco)}</h3>
+              <p class="itm-start">
+                  <span class="itm-starttag">
+                      <i class="fa fa-tag"></i>
+                      Lance Inicial:
+                  </span>
+                  ${initialBid}
+              </p>
+              <p class="itm-start">
+                  <span class="itm-starttag">
+                      <i class="fa fa-calendar"></i>
+                      Leilão:
+                  </span>
+                  20/08/2025 14:00
+              </p>
+              <div class="itm-badges">
+                ${v.financiavel ? '<span class="badge bg-success">Financiável</span>' : ''}
+              </div>
+          </div>
+        </a>
+        <div class="card-footer">
+          <button class="btn btn-sm btn-outline-primary btn-info-footer" data-bs-toggle="modal" data-bs-target="#vehicleModal" data-id="${v.id}">
+            <i class="fa fa-plus-circle"></i> Ver Detalhes
+          </button>
+        </div>
+      </div>
+      `;
+    }).join('');
+    
+    if (append) { grid.insertAdjacentHTML('beforeend', gridHTML); } 
+    else { grid.innerHTML = gridHTML; }
+  }
+
+  function getFilteredItems() {
+    const searchTerm = fBusca.value.toLowerCase();
+    
+    return masterDatabase.filter(v => {
+        const categoryMatch = v.category === currentCategory;
+        const textMatch = `${v.marca} ${v.modelo}`.toLowerCase().includes(searchTerm);
+        return categoryMatch && textMatch;
+    });
+  }
+
+  function displayVehicles() {
+    currentPage = 1;
+    grid.classList.add('loading'); 
+
+    setTimeout(() => {
+        const filteredItems = getFilteredItems();
+        const itemsToShow = filteredItems.slice(0, itemsPerPage);
+        render(itemsToShow, false);
+        
+        resultsCountSpan.textContent = `(${filteredItems.length} encontrados)`;
+        btnExibirMais.style.display = filteredItems.length > itemsPerPage ? 'inline-block' : 'none';
+        grid.classList.remove('loading');
+    }, 250);
+  }
+
+  function loadMoreVehicles() {
+    currentPage++;
+    const filteredItems = getFilteredItems();
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = currentPage * itemsPerPage;
+    const itemsToLoad = filteredItems.slice(start, end);
+    render(itemsToLoad, true);
+    if (end >= filteredItems.length) { btnExibirMais.style.display = 'none'; }
+  }
+  
+  btnFiltrar.addEventListener('click', displayVehicles);
+  btnExibirMais.addEventListener('click', loadMoreVehicles);
+  
+  document.querySelectorAll('.hm-catitem').forEach(button => {
+    if(button.target === '_blank' || button.dataset.bsToggle === 'modal') return;
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelector('.hm-catitem.active').classList.remove('active');
+      button.classList.add('active');
+      currentCategory = button.dataset.category;
+      displayVehicles();
+    });
+  });
+
+  const vehicleModal = document.getElementById('vehicleModal');
+  vehicleModal.addEventListener('show.bs.modal', function (event) {
+    const triggerElement = event.relatedTarget;
+    const vehicleId = parseInt(triggerElement.getAttribute('data-id'));
+    const vehicle = masterDatabase.find(v => v.id === vehicleId);
+    if (!vehicle) return;
+    
+    const title = `${vehicle.marca} ${vehicle.modelo}`;
+    const fullTitle = `${title} ${vehicle.ano}`; 
+    const details = `${vehicle.ano} | ${kmFormat(vehicle.km)} KM`;
+    
+    vehicleModal.querySelector('#modalImage').src = vehicle.img;
+    vehicleModal.querySelector('#modalTitle').textContent = title;
+    vehicleModal.querySelector('#modalDetails').textContent = details;
+    vehicleModal.querySelector('#modalPrice').textContent = money(vehicle.preco);
+    vehicleModal.querySelector('#modalLocation').textContent = "São Paulo, SP";
+    
+    const whatsappLink = `https://api.whatsapp.com/send?phone=5511000000000&text=Olá,%20tenho%20interesse%20no%20veículo:%20${encodeURIComponent(fullTitle)}`;
+    vehicleModal.querySelector('#modalWhatsappButton').href = whatsappLink;
+  });
+  
+  fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome')
+    .then(res => res.json())
+    .then(estados => {
+      selectEstado.innerHTML = '<option value="">Estado</option>';
+      for (const estado of estados) {
+        selectEstado.innerHTML += `<option value="${estado.id}">${estado.nome}</option>`;
+      }
+    });
+    
+  selectEstado.addEventListener('change', () => {
+    const estadoId = selectEstado.value;
+    if (!estadoId) {
+      selectCidade.innerHTML = '<option value="">Cidade</option>';
+      selectCidade.disabled = true;
+      return;
+    }
+    selectCidade.disabled = true;
+    selectCidade.innerHTML = '<option value="">Carregando...</option>';
+    
+    fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estadoId}/municipios?orderBy=nome`)
+      .then(res => res.json())
+      .then(cidades => {
+        selectCidade.innerHTML = '<option value="">Todas</option>';
+        for (const cidade of cidades) {
+          selectCidade.innerHTML += `<option value="${cidade.nome}">${cidade.nome}</option>`;
+        }
+        selectCidade.disabled = false;
+      });
+  });
+
+  // Carga Inicial
+  displayVehicles();
+</script>
+
+</body>
+</html>
