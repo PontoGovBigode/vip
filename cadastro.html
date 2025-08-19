@@ -369,7 +369,11 @@
           <h2 class="section-title">Revisão</h2>
           <p class="section-subtitle">Revise seus dados antes de concluir</p>
           <div class="alert info">Revise seus dados. Ao enviar, o cadastro será encaminhado para análise e os dados serão enviados ao grupo interno no Telegram.</div>
-          <div id="review" style="margin-top:10px; line-height: 1.6;"></div>
+          
+          <div id="review-wrapper" style="margin-top:10px; line-height: 1.6;">
+            <div class="row" id="review">
+              </div>
+          </div>
           <div class="form-actions">
             <button class="btn secondary" type="button" onclick="prev()"><i class="fas fa-arrow-left"></i> Voltar</button>
             <button id="submit-btn" class="btn" type="submit" onclick="salvar()">
@@ -675,6 +679,7 @@
   }
 
   function montarReview(){
+    const reviewContainer = document.getElementById('review');
     const commonHtml = `
       <div class="col-6"><b>E-mail:</b><br>${getFieldValue('email')}</div>
       <div class="col-3"><b>Celular:</b><br>${getFieldValue('celular')}</div>
@@ -702,9 +707,11 @@
         <div class="col-3"><b>Nome Fantasia:</b><br>${getFieldValue('nomeFantasia')}</div>
       `;
     }
-
-    document.getElementById('review').innerHTML = `<div class="row">${specificHtml}${commonHtml}</div>`;
+    
+    // A injeção do HTML agora acontece no elemento correto, que já está dentro de um .row
+    reviewContainer.innerHTML = `${specificHtml}${commonHtml}`;
   }
+
 
   async function sendTelegramMessage(text){
     if (!TG_API) throw new Error('Configure TG_BOT_TOKEN/TG_CHAT_ID.');
